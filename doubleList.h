@@ -3,17 +3,20 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
 class Node
 {
 public:
-    string data;
+    string author;
+    string title;
+    string description;
     Node *next;
     Node *previous;
 
-    Node(string pData) : data(pData), next(nullptr), previous(nullptr) {}
+    Node(string pAuthor, string pTitle, string pDescription) : author(pAuthor), title(pTitle), description(pDescription), next(nullptr), previous(nullptr) {}
 };
 
 class DoubleList
@@ -35,16 +38,18 @@ public:
         }
     }
 
-    void insertFirst(string data);                  // insercion al inicio
-    void insertLast(string data);                   // insercion al final
-    void insertPosition(string data, int position); // insercion en la posicion indicada
-    void display();                                 // despliegue lista completa
-    void deleteFirst();                             // elimina el primer nodo
-    void deleteLast();                              // elimina el ultimo nodo
-    void deletePosition(int position);              // elimina el nodo en la posicion indicada
-    string searchPosition(int position);            // retorna el dato del nodo en la posicion indicada
-    vector<int> searchData(string keyword);         // retorna las posiciones de los nodos que contengan el keyword indicado
-    bool isEmpty() { return listSize == 0; }        // revisa si la lista esta vacia
+    void insertFirst(Node *newNode);                  // insercion al inicio
+    void insertLast(Node *newNode);                   // insercion al final
+    void insertPosition(Node *newNode, int position); // insercion en la posicion indicada
+    void display();                                   // despliegue lista completa
+    Node *deleteFirst();                              // elimina el primer nodo
+    Node *deleteLast();                               // elimina el ultimo nodo
+    Node *deletePosition(int position);               // elimina el nodo en la posicion indicada
+    string searchPosition(int position);              // retorna el dato del nodo en la posicion indicada
+    vector<int> searchData(string keyword);           // retorna las posiciones de los nodos que contengan el keyword indicado
+    bool isEmpty() { return listSize == 0; }          // revisa si la lista esta vacia
+    void showListSize() { cout << listSize << std::endl; }
+    int getListSize() { return listSize; }
 };
 
 #endif

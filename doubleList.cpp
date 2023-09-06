@@ -3,17 +3,16 @@
 
 using namespace std;
 
-void DoubleList::insertFirst(string data)
+void DoubleList::insertFirst(Node *newNode)
 {
     if (isEmpty())
     {
-        first = new Node(data);
+        first = newNode;
         last = first;
         listSize++;
     }
     else
     {
-        Node *newNode = new Node(data);
         first->previous = newNode;
         newNode->next = first;
         first = newNode;
@@ -21,17 +20,16 @@ void DoubleList::insertFirst(string data)
     }
 }
 
-void DoubleList::insertLast(string data)
+void DoubleList::insertLast(Node *newNode)
 {
     if (isEmpty())
     {
-        first = new Node(data);
+        first = newNode;
         last = first;
         listSize++;
     }
     else
     {
-        Node *newNode = new Node(data);
         last->next = newNode;
         newNode->previous = last;
         last = newNode;
@@ -39,11 +37,11 @@ void DoubleList::insertLast(string data)
     }
 }
 
-void DoubleList::insertPosition(string data, int position)
+void DoubleList::insertPosition(Node *newNode, int position)
 {
     if (isEmpty())
     {
-        first = new Node(data);
+        first = newNode;
         last = first;
         listSize++;
     }
@@ -51,7 +49,6 @@ void DoubleList::insertPosition(string data, int position)
     {
         if (position == 0)
         {
-            Node *newNode = new Node(data);
             first->previous = newNode;
             newNode->next = first;
             first = first->previous;
@@ -60,7 +57,6 @@ void DoubleList::insertPosition(string data, int position)
         {
             if (position > listSize)
             {
-                Node *newNode = new Node(data);
                 last->next = newNode;
                 newNode->previous = last;
                 last = newNode;
@@ -74,7 +70,6 @@ void DoubleList::insertPosition(string data, int position)
                     temp = temp->next;
                 }
                 Node *temp2 = temp->previous;
-                Node *newNode = new Node(data);
                 temp2->next = newNode;
                 newNode->previous = temp2;
                 newNode->next = temp;
@@ -96,119 +91,107 @@ void DoubleList::display()
         Node *temp = first;
         while (temp != nullptr)
         {
-            cout << temp->data << endl;
+            cout << temp->title << endl;
             temp = temp->next;
         }
     }
 }
 
-void DoubleList::deleteFirst()
+Node *DoubleList::deleteFirst()
 {
-    if (!isEmpty())
+    Node *temp = first;
+    Node *result = new Node(first->author, first->title, first->description);
+    first = first->next;
+    if (first != nullptr)
+    {
+        first->previous = nullptr;
+    }
+    listSize--;
+    delete temp;
+    return result;
+}
+
+Node *DoubleList::deleteLast()
+{
+    Node *temp = last;
+    Node *result = new Node(last->author, last->title, last->description);
+    last = last->previous;
+    if (last != nullptr)
+    {
+        last->next = nullptr;
+    }
+    listSize--;
+    delete temp;
+    return result;
+}
+
+Node *DoubleList::deletePosition(int position)
+{
+    Node *result = nullptr;
+    if (position == 0)
     {
         Node *temp = first;
+        result = new Node(first->author, first->title, first->description);
         first = first->next;
-        if (first != nullptr)
-        {
-            first->previous = nullptr;
-        }
+        first->previous = nullptr;
         listSize--;
         delete temp;
+        return result;
     }
-}
-
-void DoubleList::deleteLast()
-{
-    if (!isEmpty())
+    Node *temp = first;
+    while (position-- > 0)
     {
-        Node *temp = last;
-        last = last->previous;
-        if (last != nullptr)
-        {
-            last->next = nullptr;
-        }
-        listSize--;
-        delete temp;
+        temp = temp->next;
     }
-}
-
-void DoubleList::deletePosition(int position)
-{
-    if (!isEmpty())
+    temp->previous->next = temp->next;
+    if (temp->next != nullptr)
     {
-        if (position == 0)
-        {
-            Node *temp = first;
-            first = first->next;
-            first->previous = nullptr;
-            listSize--;
-            delete temp;
-        }
-        else
-        {
-            Node *temp = first;
-            while (temp != nullptr && position-- > 0)
-            {
-                temp = temp->next;
-            }
-            if (temp == nullptr)
-            {
-                return;
-            }
-            temp->previous->next = temp->next;
-            if (temp->next != nullptr)
-            {
-                temp->next->previous = temp->previous;
-            }
-            listSize--;
-            delete temp;
-        }
+        temp->next->previous = temp->previous;
     }
+    result = new Node(temp->author, temp->title, temp->description);
+    listSize--;
+    delete temp;
+    return result;
 }
 
 string DoubleList::searchPosition(int position)
 {
-    if (!isEmpty())
+    vector<string> result;
+    if (position == 0)
     {
-        if (position == 0)
+        return first->title;
+    }
+    else
+    {
+        if (position < listSize)
         {
-            return first->data;
+            Node *temp = first;
+            while (position-- > 0)
+            {
+                temp = temp->next;
+            }
+            return temp->title;
         }
         else
         {
-            if (position < listSize)
-            {
-                Node *temp = first;
-                while (position-- > 0)
-                {
-                    temp = temp->next;
-                }
-                return temp->data;
-            }
-            else
-            {
-                return "Esa posición no existe";
-            }
+            return "Esa posición no existe";
         }
     }
 }
 
 vector<int> DoubleList::searchData(string keyword)
 {
-    if (!isEmpty())
+    vector<int> result;
+    int count = 0;
+    Node *temp = first;
+    while (temp != nullptr)
     {
-        vector<int> result;
-        int count = 0;
-        Node *temp = first;
-        while (temp != nullptr)
+        if (temp->title.find(keyword) != string::npos)
         {
-            if (temp->data.find(keyword) != string::npos)
-            {
-                result.push_back(count);
-            }
-            count++;
-            temp = temp->next;
+            result.push_back(count);
         }
-        return result;
+        count++;
+        temp = temp->next;
     }
+    return result;
 }

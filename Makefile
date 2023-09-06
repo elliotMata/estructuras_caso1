@@ -1,8 +1,8 @@
 all:
-	g++ -o main.o main.cpp newsSeeker.cpp doubleList.cpp
+	g++ -o news.o news.cpp newsSeeker.cpp doubleList.cpp -lcurl
 
 double:
 	g++ doubleList.cpp -o doubleList.o
 
-news:
+newsSeeker:
 	g++ -o newsSeeker.o newsSeeker.cpp doubleList.cpp
